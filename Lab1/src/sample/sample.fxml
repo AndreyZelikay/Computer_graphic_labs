@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Slider?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="537.0" prefWidth="723.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controller">
+   <columnConstraints>
+      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+   </columnConstraints>
+   <rowConstraints>
+      <RowConstraints maxHeight="69.0" minHeight="4.0" prefHeight="29.0" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="154.0" minHeight="10.0" prefHeight="113.0" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="151.0" minHeight="10.0" prefHeight="104.0" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="137.0" minHeight="10.0" prefHeight="112.0" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="200.0" minHeight="190.0" prefHeight="145.0" vgrow="SOMETIMES" />
+   </rowConstraints>
+   <HBox id="CMYK" prefHeight="100.0" prefWidth="200.0" GridPane.rowIndex="1">
+      <VBox id="Cyan" layoutX="10.0" layoutY="10.0" prefHeight="100.0" prefWidth="161.0">
+         <padding>
+            <Insets left="10.0" right="10.0" />
+         </padding>
+         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Cyan" textAlignment="CENTER" wrappingWidth="161.13671875">
+            <VBox.margin>
+               <Insets top="10.0" />
+            </VBox.margin>
+            <font>
+               <Font name="Arial" size="14.0" />
+            </font>
+         </Text>
+         <TextField fx:id="cyanTextField" maxWidth="-Infinity" prefHeight="25.0" prefWidth="78.0" promptText="0" style="-fx-alignment: center;">
+            <VBox.margin>
+               <Insets left="45.0" top="10.0" />
+            </VBox.margin>
+         </TextField>
+         <Slider fx:id="cyanSlider" blockIncrement="1.0" majorTickUnit="1.0" max="1.0" maxWidth="-Infinity" minorTickCount="0" prefHeight="29.0" prefWidth="125.0">
+            <VBox.margin>
+               <Insets left="20.0" top="10.0" />
+            </VBox.margin>
+         </Slider>
+      </VBox>
+      <VBox layoutX="192.0" layoutY="10.0" prefHeight="100.0" prefWidth="161.0">
+         <padding>
+            <Insets left="10.0" right="10.0" />
+         </padding>
+         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Magenta" textAlignment="CENTER" wrappingWidth="161.13671875">
+            <VBox.margin>
+               <Insets top="10.0" />
+            </VBox.margin>
+            <font>
+               <Font name="Arial" size="14.0" />
+            </font>
+         </Text>
+         <TextField fx:id="magentaTextField" maxWidth="-Infinity" prefHeight="25.0" prefWidth="78.0" promptText="0" style="-fx-alignment: center;">
+            <VBox.margin>
+               <Insets left="45.0" top="10.0" />
+            </VBox.margin>
+         </TextField>
+         <Slider fx:id="magentaSlider" max="1.0" maxWidth="-Infinity" prefHeight="29.0" prefWidth="125.0">
+            <VBox.margin>
+               <Insets left="20.0" top="10.0" />
+            </VBox.margin>
+         </Slider>
+      </VBox>
+      <VBox layoutX="374.0" layoutY="10.0" prefHeight="100.0" prefWidth="161.0">
+         <padding>
+            <Insets left="10.0" right="10.0" />
+         </padding>
+         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Yellow" textAlignment="CENTER" wrappingWidth="161.13671875">
+            <VBox.margin>
+               <Insets top="10.0" />
+            </VBox.margin>
+            <font>
+               <Font name="Arial" size="14.0" />
+            </font>
+         </Text>
+         <TextField fx:id="yellowTextField" maxWidth="-Infinity" prefHeight="25.0" prefWidth="78.0" promptText="0" style="-fx-alignment: center;">
+            <VBox.margin>
+               <Insets left="45.0" top="10.0" />
+            </VBox.margin>
+         </TextField>
+         <Slider fx:id="yellowSlider" max="1.0" maxWidth="-Infinity" prefHeight="29.0" prefWidth="125.0">
+            <VBox.margin>
+               <Insets left="20.0" top="10.0" />
+            </VBox.margin>
+         </Slider>
+      </VBox>
+      <VBox prefHeight="100.0" prefWidth="161.0">
+         <padding>
+            <Insets left="10.0" right="10.0" />
+         </padding>
+         <children>
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Key" textAlignment="CENTER" wrappingWidth="161.13671875">
+               <VBox.margin>
+                  <Insets top="10.0" />
+               </VBox.margin>
+               <font>
+                  <Font name="Arial" size="14.0" />
+               </font>
+            </Text>
+            <TextField fx:id="keyTextField" maxWidth="-Infinity" prefHeight="25.0" prefWidth="78.0" promptText="0" style="-fx-alignment: center;">
+               <VBox.margin>
+                  <Insets left="45.0" top="10.0" />
+               </VBox.margin>
+            </TextField>
+            <Slider fx:id="keySlider" max="1.0" maxWidth="-Infinity" prefHeight="29.0" prefWidth="125.0">
+               <VBox.margin>
+                  <Insets left="20.0" top="10.0" />
+               </VBox.margin>
+            </Slider>
+         </children>
+      </VBox>
+   </HBox>
+   <HBox id="LAB" maxWidth="-Infinity" prefHeight="108.0" prefWidth="574.0" GridPane.halignment="CENTER" GridPane.rowIndex="3">
+      <children>
+         <VBox prefHeight="100.0" prefWidth="161.0">
+            <padding>
+               <Insets left="10.0" right="10.0" />
+            </padding>
+            <children>
+               <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Hue" textAlignment="CENTER" wrappingWidth="161.13671875">
+                  <VBox.margin>
+                     <Insets top="10.0" />
+                  </VBox.margin>
+                  <font>
+                     <Font name="Arial" size="14.0" />
+                  </font>
+               </Text>
+               <TextField fx:id="hueTextField" maxWidth="-Infinity" prefHeight="25.0" prefWidth="78.0" promptText="0" style="-fx-alignment: center;">
+                  <VBox.margin>
+                     <Insets left="45.0" top="10.0" />
+                  </VBox.margin>
+               </TextField>
+               <Slider fx:id="hueSlider" max="360.0" maxWidth="-Infinity" prefHeight="29.0" prefWidth="125.0">
+                  <VBox.margin>
+                     <Insets left="20.0" top="10.0" />
+                  </VBox.margin>
+               </Slider>
+            </children>
+         </VBox>
+         <VBox prefHeight="100.0" prefWidth="161.0">
+            <padding>
+               <Insets left="10.0" right="10.0" />
+            </padding>
+            <children>
+               <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Saturation" textAlignment="CENTER" wrappingWidth="161.13671875">
+                  <VBox.margin>
+                     <Insets top="10.0" />
+                  </VBox.margin>
+                  <font>
+                     <Font name="Arial" size="14.0" />
+                  </font>
+               </Text>
+               <TextField fx:id="saturationTextField" maxWidth="-Infinity" prefHeight="25.0" prefWidth="78.0" promptText="0" style="-fx-alignment: center;">
+                  <VBox.margin>
+                     <Insets left="45.0" top="10.0" />
+                  </VBox.margin>
+               </TextField>
+               <Slider fx:id="saturationSlider" max="1.0" maxWidth="-Infinity" prefHeight="29.0" prefWidth="125.0">
+                  <VBox.margin>
+                     <Insets left="20.0" top="10.0" />
+                  </VBox.margin>
+               </Slider>
+            </children>
+         </VBox>
+         <VBox prefHeight="100.0" prefWidth="161.0">
+            <padding>
+               <Insets left="10.0" right="10.0" />
+            </padding>
+            <children>
+               <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Value" textAlignment="CENTER" wrappingWidth="161.13671875">
+                  <VBox.margin>
+                     <Insets top="10.0" />
+                  </VBox.margin>
+                  <font>
+                     <Font name="Arial" size="14.0" />
+                  </font>
+               </Text>
+               <TextField fx:id="valueTextField" maxWidth="-Infinity" prefHeight="25.0" prefWidth="78.0" promptText="0" style="-fx-alignment: center;">
+                  <VBox.margin>
+                     <Insets left="45.0" top="10.0" />
+                  </VBox.margin>
+               </TextField>
+               <Slider fx:id="valueSlider" max="1.0" maxWidth="-Infinity" prefHeight="29.0" prefWidth="125.0">
+                  <VBox.margin>
+                     <Insets left="20.0" top="10.0" />
+                  </VBox.margin>
+               </Slider>
+            </children>
+         </VBox>
+      </children></HBox>
+   <HBox id="HSV" maxWidth="-Infinity" prefHeight="108.0" prefWidth="574.0" GridPane.halignment="CENTER" GridPane.rowIndex="2">
+      <children>
+         <VBox prefHeight="100.0" prefWidth="161.0">
+            <padding>
+               <Insets left="10.0" right="10.0" />
+            </padding>
+            <children>
+               <Text strokeType="OUTSIDE" strokeWidth="0.0" text="L" textAlignment="CENTER" wrappingWidth="161.13671875">
+                  <VBox.margin>
+                     <Insets top="10.0" />
+                  </VBox.margin>
+                  <font>
+                     <Font name="Arial" size="14.0" />
+                  </font>
+               </Text>
+               <TextField fx:id="lTextField" maxWidth="-Infinity" prefHeight="25.0" prefWidth="78.0" promptText="0" style="-fx-alignment: center;">
+                  <VBox.margin>
+                     <Insets left="45.0" top="10.0" />
+                  </VBox.margin>
+               </TextField>
+               <Slider fx:id="lSlider" maxWidth="-Infinity" prefHeight="29.0" prefWidth="125.0">
+                  <VBox.margin>
+                     <Insets left="20.0" top="10.0" />
+                  </VBox.margin>
+               </Slider>
+            </children>
+         </VBox>
+         <VBox prefHeight="100.0" prefWidth="161.0">
+            <padding>
+               <Insets left="10.0" right="10.0" />
+            </padding>
+            <children>
+               <Text strokeType="OUTSIDE" strokeWidth="0.0" text="A" textAlignment="CENTER" wrappingWidth="161.13671875">
+                  <VBox.margin>
+                     <Insets top="10.0" />
+                  </VBox.margin>
+                  <font>
+                     <Font name="Arial" size="14.0" />
+                  </font>
+               </Text>
+               <TextField fx:id="aTextField" maxWidth="-Infinity" prefHeight="25.0" prefWidth="78.0" promptText="0" style="-fx-alignment: center;">
+                  <VBox.margin>
+                     <Insets left="45.0" top="10.0" />
+                  </VBox.margin>
+               </TextField>
+               <Slider fx:id="aSlider" max="128.0" maxWidth="-Infinity" min="-128.0" prefHeight="29.0" prefWidth="125.0">
+                  <VBox.margin>
+                     <Insets left="20.0" top="10.0" />
+                  </VBox.margin>
+               </Slider>
+            </children>
+         </VBox>
+         <VBox prefHeight="100.0" prefWidth="161.0">
+            <padding>
+               <Insets left="10.0" right="10.0" />
+            </padding>
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="B" textAlignment="CENTER" wrappingWidth="161.13671875">
+               <VBox.margin>
+                  <Insets top="10.0" />
+               </VBox.margin>
+               <font>
+                  <Font name="Arial" size="14.0" />
+               </font>
+            </Text>
+            <TextField fx:id="bTextField" maxWidth="-Infinity" prefHeight="25.0" prefWidth="78.0" promptText="0" style="-fx-alignment: center;">
+               <VBox.margin>
+                  <Insets left="45.0" top="10.0" />
+               </VBox.margin>
+            </TextField>
+            <Slider fx:id="bSlider" max="128.0" maxWidth="-Infinity" min="-128.0" prefHeight="29.0" prefWidth="125.0">
+               <VBox.margin>
+                  <Insets left="20.0" top="10.0" />
+               </VBox.margin>
+            </Slider>
+         </VBox>
+      </children>
+   </HBox>
+   <Circle fx:id="circle" fill="DODGERBLUE" radius="70.0" stroke="BLACK" strokeType="INSIDE" GridPane.halignment="CENTER" GridPane.rowIndex="4" GridPane.valignment="CENTER" />
+</GridPane>
