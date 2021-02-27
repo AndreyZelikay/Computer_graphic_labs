@@ -8,10 +8,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 
 import java.net.URL;
-import java.text.NumberFormat;
 import java.util.ResourceBundle;
-import java.util.function.Consumer;
-import java.util.function.Supplier;
 
 public class Controller implements Initializable {
 
@@ -85,21 +82,21 @@ public class Controller implements Initializable {
 
     private void onCYMKEdit() {
         double[] lab = Converter.CMYK_LAB(
-                (int) cyanSlider.getValue(),
-                (int) magentaSlider.getValue(),
-                (int) yellowSlider.getValue(),
-                (int) keySlider.getValue()
+                cyanSlider.getValue(),
+                magentaSlider.getValue(),
+                yellowSlider.getValue(),
+                keySlider.getValue()
         );
 
-        lTextField.setText(Double.toString(lab[0]));
-        aTextField.setText(Double.toString(lab[1]));
-        bTextField.setText(Double.toString(lab[2]));
+        lSlider.setValue(lab[0]);
+        aSlider.setValue(lab[1]);
+        bSlider.setValue(lab[2]);
 
         double[] hsv = Converter.LAB_HSV(lab[0], lab[1], lab[2]);
 
-        hueTextField.setText(Double.toString(hsv[0]));
-        saturationTextField.setText(Double.toString(hsv[1]));
-        valueTextField.setText(Double.toString(hsv[2]));
+        hueSlider.setValue(hsv[0]);
+        saturationSlider.setValue(hsv[1]);
+        valueSlider.setValue(hsv[2]);
 
         resetCircleColor();
     }
@@ -111,16 +108,16 @@ public class Controller implements Initializable {
                 bSlider.getValue()
         );
 
-        hueTextField.setText(Double.toString(hsv[0]));
-        saturationTextField.setText(Double.toString(hsv[1]));
-        valueTextField.setText(Double.toString(hsv[2]));
+        hueSlider.setValue(hsv[0]);
+        saturationSlider.setValue(hsv[1]);
+        valueSlider.setValue(hsv[2]);
 
         double[] cmyk = Converter.HSV_CMYK(hsv[0], hsv[1], hsv[2]);
 
-        cyanTextField.setText(Double.toString(cmyk[0]));
-        magentaTextField.setText(Double.toString(cmyk[0]));
-        yellowTextField.setText(Double.toString(cmyk[0]));
-        keyTextField.setText(Double.toString(cmyk[0]));
+        cyanSlider.setValue(cmyk[0]);
+        magentaSlider.setValue(cmyk[1]);
+        yellowSlider.setValue(cmyk[2]);
+        keySlider.setValue(cmyk[3]);
 
         resetCircleColor();
     }
@@ -132,16 +129,16 @@ public class Controller implements Initializable {
                 valueSlider.getValue()
         );
 
-        cyanTextField.setText(Double.toString(cmyk[0]));
-        magentaTextField.setText(Double.toString(cmyk[0]));
-        yellowTextField.setText(Double.toString(cmyk[0]));
-        keyTextField.setText(Double.toString(cmyk[0]));
+        cyanSlider.setValue(cmyk[0]);
+        magentaSlider.setValue(cmyk[1]);
+        yellowSlider.setValue(cmyk[2]);
+        keySlider.setValue(cmyk[3]);
 
         double[] lab = Converter.CMYK_LAB(cmyk[0], cmyk[1], cmyk[2], cmyk[3]);
 
-        lTextField.setText(Double.toString(lab[0]));
-        aTextField.setText(Double.toString(lab[1]));
-        bTextField.setText(Double.toString(lab[2]));
+        lSlider.setValue(lab[0]);
+        aSlider.setValue(lab[1]);
+        bSlider.setValue(lab[2]);
 
         resetCircleColor();
     }
@@ -149,15 +146,36 @@ public class Controller implements Initializable {
     private void setupColorSelector(Slider slider, TextField textField, Runnable onColorModelEdit) {
         slider.setValue(0);
         textField.setText(Integer.toString(0));
-        textField.textProperty().addListener((obs, oldval, newVal) -> {
-            newVal = newVal.replace("0", "");
-            if (!newVal.matches("\\d+")) {
-                textField.setText(oldval);
+
+        textField.focusedProperty().addListener((obs, oldval, newval) -> {
+            if(newval) {
+                textField.setText("");
+                return;
+            }
+
+            if(!textField.getText().matches("-?\\d+(\\.(\\d+)?)?")) {
+                textField.setText(String.valueOf(0));
+                return;
+            }
+
+            double value = Double.parseDouble(textField.getText());
+
+            if(value >= slider.getMin() && value <= slider.getMax()) {
+                slider.setValue(value);
+                onColorModelEdit.run();
             } else {
-                textField.setText(newVal);
+                textField.setText(String.valueOf(0));
             }
         });
-        textField.textProperty().bindBidirectional(slider.valueProperty(), NumberFormat.getIntegerInstance());
+
+        slider.valueProperty().addListener((obs, oldval, newval) -> {
+            if(slider.getMax() - slider.getMin() > 1) {
+                textField.setText(String.valueOf(newval.intValue()));
+            } else {
+                textField.setText(String.valueOf(newval.doubleValue()));
+            }
+        });
+
         slider.setOnMouseReleased(e -> onColorModelEdit.run());
     }
 

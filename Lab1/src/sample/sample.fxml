@@ -139,7 +139,7 @@
                      <Insets left="45.0" top="10.0" />
                   </VBox.margin>
                </TextField>
-               <Slider fx:id="hueSlider" max="360.0" maxWidth="-Infinity" prefHeight="29.0" prefWidth="125.0">
+               <Slider fx:id="hueSlider" max="1.0" maxWidth="-Infinity" prefHeight="29.0" prefWidth="125.0">
                   <VBox.margin>
                      <Insets left="20.0" top="10.0" />
                   </VBox.margin>
