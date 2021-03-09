@@ -2,6 +2,8 @@ package sample;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.paint.Color;
@@ -64,8 +66,18 @@ public class Controller implements Initializable {
     @FXML
     private Circle circle;
 
+    @FXML
+    private ColorPicker colorPicker;
+
+    private final Color defaultColor = Color.rgb(255, 255, 255);
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        colorPicker.setValue(defaultColor);
+        circle.setFill(defaultColor);
+
+        onCYMKEdit();
+
         setupColorSelector(cyanSlider, cyanTextField, this::onCYMKEdit);
         setupColorSelector(magentaSlider, magentaTextField, this::onCYMKEdit);
         setupColorSelector(yellowSlider, yellowTextField, this::onCYMKEdit);
@@ -81,32 +93,58 @@ public class Controller implements Initializable {
     }
 
     private void onCYMKEdit() {
-        double[] lab = Converter.CMYK_LAB(
+        double[] cmyk = new double[]{
                 cyanSlider.getValue(),
                 magentaSlider.getValue(),
                 yellowSlider.getValue(),
                 keySlider.getValue()
-        );
+        };
+
+        double[] lab = Converter.CMYK_LAB(cmyk[0], cmyk[1], cmyk[2], cmyk[3]);
 
         lSlider.setValue(lab[0]);
         aSlider.setValue(lab[1]);
         bSlider.setValue(lab[2]);
 
-        double[] hsv = Converter.LAB_HSV(lab[0], lab[1], lab[2]);
+        double[] hsv = Converter.CMYK_HSV(cmyk[0], cmyk[1], cmyk[2], cmyk[3]);
 
         hueSlider.setValue(hsv[0]);
         saturationSlider.setValue(hsv[1]);
         valueSlider.setValue(hsv[2]);
 
-        resetCircleColor();
+        resetCircleColor(Converter.CMYK_RGB(cmyk[0], cmyk[1], cmyk[2], cmyk[3]));
     }
 
     private void onLABEdit() {
-        double[] hsv = Converter.LAB_HSV(
+        double[] lab = new double[]{
                 lSlider.getValue(),
                 aSlider.getValue(),
                 bSlider.getValue()
-        );
+        };
+
+        double[] hsv;
+
+        try {
+            hsv = Converter.LAB_HSV(lab[0], lab[1], lab[2]);
+        } catch (RuntimeException e) {
+            lab = Converter.CMYK_LAB(
+                    cyanSlider.getValue(),
+                    magentaSlider.getValue(),
+                    yellowSlider.getValue(),
+                    keySlider.getValue()
+            );
+
+            lSlider.setValue(lab[0]);
+            aSlider.setValue(lab[1]);
+            bSlider.setValue(lab[2]);
+
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Lab conversion");
+            alert.setContentText(e.getMessage());
+            alert.show();
+
+            return;
+        }
 
         hueSlider.setValue(hsv[0]);
         saturationSlider.setValue(hsv[1]);
@@ -119,15 +157,17 @@ public class Controller implements Initializable {
         yellowSlider.setValue(cmyk[2]);
         keySlider.setValue(cmyk[3]);
 
-        resetCircleColor();
+        resetCircleColor(Converter.LAB_RGB(lab[0], lab[1], lab[2]));
     }
 
     private void onHSVEdit() {
-        double[] cmyk = Converter.HSV_CMYK(
+        double[] hsv = new double[]{
                 hueSlider.getValue(),
                 saturationSlider.getValue(),
                 valueSlider.getValue()
-        );
+        };
+
+        double[] cmyk = Converter.HSV_CMYK(hsv[0], hsv[1], hsv[2]);
 
         cyanSlider.setValue(cmyk[0]);
         magentaSlider.setValue(cmyk[1]);
@@ -140,7 +180,7 @@ public class Controller implements Initializable {
         aSlider.setValue(lab[1]);
         bSlider.setValue(lab[2]);
 
-        resetCircleColor();
+        resetCircleColor(Converter.HSV_RGB(hsv[0], hsv[1], hsv[2]));
     }
 
     private void setupColorSelector(Slider slider, TextField textField, Runnable onColorModelEdit) {
@@ -148,19 +188,19 @@ public class Controller implements Initializable {
         textField.setText(Integer.toString(0));
 
         textField.focusedProperty().addListener((obs, oldval, newval) -> {
-            if(newval) {
+            if (newval) {
                 textField.setText("");
                 return;
             }
 
-            if(!textField.getText().matches("-?\\d+(\\.(\\d+)?)?")) {
+            if (!textField.getText().matches("-?\\d+(\\.(\\d+)?)?")) {
                 textField.setText(String.valueOf(0));
                 return;
             }
 
             double value = Double.parseDouble(textField.getText());
 
-            if(value >= slider.getMin() && value <= slider.getMax()) {
+            if (value >= slider.getMin() && value <= slider.getMax()) {
                 slider.setValue(value);
                 onColorModelEdit.run();
             } else {
@@ -169,7 +209,7 @@ public class Controller implements Initializable {
         });
 
         slider.valueProperty().addListener((obs, oldval, newval) -> {
-            if(slider.getMax() - slider.getMin() > 1) {
+            if (slider.getMax() - slider.getMin() > 1) {
                 textField.setText(String.valueOf(newval.intValue()));
             } else {
                 textField.setText(String.valueOf(newval.doubleValue()));
@@ -179,7 +219,15 @@ public class Controller implements Initializable {
         slider.setOnMouseReleased(e -> onColorModelEdit.run());
     }
 
-    private void resetCircleColor() {
-        circle.setFill(Color.hsb(hueSlider.getValue(), saturationSlider.getValue(), valueSlider.getValue()));
+    public void onColorPicker() {
+        hueSlider.setValue(colorPicker.getValue().getHue() / 360);
+        saturationSlider.setValue(colorPicker.getValue().getSaturation());
+        valueSlider.setValue(colorPicker.getValue().getBrightness());
+        onHSVEdit();
+    }
+
+    private void resetCircleColor(int[] rgb) {
+        colorPicker.setValue(Color.rgb(rgb[0], rgb[1], rgb[2]));
+        circle.setFill(Color.rgb(rgb[0], rgb[1], rgb[2]));
     }
 }

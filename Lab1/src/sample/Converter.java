@@ -1,5 +1,6 @@
 package sample;
 
+import java.awt.*;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.function.Function;
@@ -7,7 +8,7 @@ import java.util.stream.Stream;
 
 public class Converter {
 
-    private static int[] CMYK_RGB(double c, double m, double y, double k) {
+    public static int[] CMYK_RGB(double c, double m, double y, double k) {
         return new int[]{
                 (int) (255 * (1 - c) * (1 - k)),
                 (int) (255 * (1 - m) * (1 - k)),
@@ -16,12 +17,12 @@ public class Converter {
     }
 
     private static double[] RGB_CMYK(int r, int g, int b) {
-        int k = Stream.of(1 - r / 255, 1 - g / 255, 1 - b / 255).min(Comparator.comparingInt(a -> a)).get();
+        double k = Stream.of(1 - r / 255., 1 - g / 255., 1 - b / 255.).min(Comparator.comparingDouble(a -> a)).get();
 
         return new double[]{
-                (double) (1 - r / 255 - k) / (1 - k),
-                (double) (1 - g / 255 - k) / (1 - k),
-                (double) (1 - b / 255 - k) / (1 - k),
+                (1 - r / 255. - k) / (1 - k),
+                (1 - g / 255. - k) / (1 - k),
+                (1 - b / 255. - k) / (1 - k),
                 k
         };
     }
@@ -120,74 +121,24 @@ public class Converter {
     }
 
     private static double[] RGB_HSV(int red, int green, int blue) {
-        double[] hsv = new double[3];
-        float r = red / 255f;
-        float g = green / 255f;
-        float b = blue / 255f;
-
-        float max = Math.max(r, Math.max(g, b));
-        float min = Math.min(r, Math.min(g, b));
-        float delta = max - min;
-
-        // Hue
-        if (max == min) {
-            hsv[0] = 0;
-        } else if (max == r) {
-            hsv[0] = ((g - b) / delta) * 60f;
-        } else if (max == g) {
-            hsv[0] = ((b - r) / delta + 2f) * 60f;
-        } else if (max == b) {
-            hsv[0] = ((r - g) / delta + 4f) * 60f;
-        }
-
-        // Saturation
-        if (delta == 0)
-            hsv[1] = 0;
-        else
-            hsv[1] = delta / max;
-
-        //Value
-        hsv[2] = max;
-
-        return hsv;
+        float[] hsv = new float[3];
+        Color.RGBtoHSB(red, green, blue, hsv);
+        return new double[]{hsv[0], hsv[1], hsv[2]};
     }
 
-    private static int[] HSV_RGB(double hue, double saturation, double value) {
-        int[] rgb = new int[3];
+    public static int[] HSV_RGB(double hue, double saturation, double value) {
+        Color color = Color.getHSBColor((float) hue, (float) saturation, (float) value);
 
-        float hi = (float) Math.floor(hue / 60.0) % 6;
-        float f = (float) ((hue / 60.0) - Math.floor(hue / 60.0));
-        float p = (float) (value * (1.0 - saturation));
-        float q = (float) (value * (1.0 - (f * saturation)));
-        float t = (float) (value * (1.0 - ((1.0 - f) * saturation)));
+        return new int[]{
+                color.getRed(),
+                color.getGreen(),
+                color.getBlue()
+        };
+    }
 
-        if (hi == 0) {
-            rgb[0] = (int) (value * 255);
-            rgb[1] = (int) (t * 255);
-            rgb[2] = (int) (p * 255);
-        } else if (hi == 1) {
-            rgb[0] = (int) (q * 255);
-            rgb[1] = (int) (value * 255);
-            rgb[2] = (int) (p * 255);
-        } else if (hi == 2) {
-            rgb[0] = (int) (p * 255);
-            rgb[1] = (int) (value * 255);
-            rgb[2] = (int) (t * 255);
-        } else if (hi == 3) {
-            rgb[0] = (int) (p * 255);
-            rgb[1] = (int) (value * 255);
-            rgb[2] = (int) (q * 255);
-        } else if (hi == 4) {
-            rgb[0] = (int) (t * 255);
-            rgb[1] = (int) (value * 255);
-            rgb[2] = (int) (p * 255);
-        } else if (hi == 5) {
-            rgb[0] = (int) (value * 255);
-            rgb[1] = (int) (p * 255);
-            rgb[2] = (int) (q * 255);
-        }
-
-        return rgb;
+    public static int[] LAB_RGB(double L, double A, double B) {
+        double[] xyz = LAB_XYZ(L, A, B);
+        return XYZ_RGB(xyz[0], xyz[1], xyz[2]);
     }
 
     public static double[] CMYK_LAB(double c, double m, double y, double k) {
@@ -196,21 +147,22 @@ public class Converter {
         return XYZ_LAB(xyz[0], xyz[1], xyz[2]);
     }
 
+    public static double[] CMYK_HSV(double c, double m, double y, double k) {
+        int[] rgb = CMYK_RGB(c, m, y, k);
+        return RGB_HSV(rgb[0], rgb[1], rgb[2]);
+    }
+
     public static double[] LAB_HSV(double L, double A, double B) {
         double[] xyz = LAB_XYZ(L, A, B);
         int[] rgb = XYZ_RGB(xyz[0], xyz[1], xyz[2]);
+        if (Arrays.stream(rgb).anyMatch(value -> value < 0)) {
+            throw new RuntimeException(String.format("unable to convert lab(%.0f,%.0f,%.0f) to hsv", L, A, B));
+        }
         return RGB_HSV(rgb[0], rgb[1], rgb[2]);
     }
 
     public static double[] HSV_CMYK(double hue, double saturation, double value) {
         int[] rgb = HSV_RGB(hue, saturation, value);
         return RGB_CMYK(rgb[0], rgb[1], rgb[2]);
-    }
-
-    public static void main(String[] args) {
-        System.out.println(Arrays.toString(CMYK_RGB(1, 0.5, 0.2, 0.5)));
-        System.out.println(Arrays.toString(RGB_CMYK(0, 63, 102)));
-        System.out.println(Arrays.toString(RGB_XYZ(0, 63, 102)));
-        System.out.println();
     }
 }
