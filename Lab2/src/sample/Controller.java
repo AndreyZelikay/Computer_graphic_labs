@@ -1,10 +1,7 @@
 package sample;
 
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.stage.FileChooser;
 
 import java.io.File;
@@ -28,7 +25,7 @@ public class Controller {
 
     {
         fileChooser = new FileChooser();
-        File userDirectory = new File(System.getProperty("user.dir"));
+        File userDirectory = new File(System.getProperty("user.dir") + File.separator + "lab2 files for testing");
         fileChooser.setInitialDirectory(userDirectory);
     }
 
@@ -45,7 +42,8 @@ public class Controller {
 
     private String getString(File file) {
         Matcher matcher = Pattern.compile(fileNameRegex).matcher(file.getName());
-        if(!matcher.matches()) {
+        if (!matcher.matches()) {
+            new Alert(Alert.AlertType.ERROR, "incorrect file " + file.getName()).show();
             throw new RuntimeException("incorrect file");
         }
         return String.format("%s | %s | %s | %s %s",
