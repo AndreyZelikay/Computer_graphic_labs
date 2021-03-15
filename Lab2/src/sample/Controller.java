@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 public class Controller {
 
     private static final String fileNameRegex =
-            "(?<imageSize>\\d+x\\d+)x(?<dpi>\\d+)?(?<compressionType>[a-zA-z]+)?(?<extension>\\.[a-zA-z]+)";
+            "(?<width>\\d+)[xх](?<height>\\d+)[xх](?<dpi>\\d+)(?<compressionType>[a-zA-z0-9+]+)?(?<extension>\\.[a-zA-z]+?$)";
 
 
     @FXML
@@ -24,7 +24,13 @@ public class Controller {
     @FXML
     private ListView<Label> listView;
 
-    private final FileChooser fileChooser = new FileChooser();
+    private final FileChooser fileChooser;
+
+    {
+        fileChooser = new FileChooser();
+        File userDirectory = new File(System.getProperty("user.dir"));
+        fileChooser.setInitialDirectory(userDirectory);
+    }
 
     public void onClick() {
         listView.getItems().clear();
@@ -40,8 +46,15 @@ public class Controller {
     private String getString(File file) {
         Matcher matcher = Pattern.compile(fileNameRegex).matcher(file.getName());
         if(!matcher.matches()) {
-            throw new RuntimeException("incorrect file name");
+            throw new RuntimeException("incorrect file");
         }
-        return String.format("%s/ %s", matcher.group("imageSize"), matcher.group("dpi"));
+        return String.format("%s | %s | %s | %s %s",
+                file.getName(),
+                matcher.group("width") + "x" + matcher.group("height"),
+                matcher.group("dpi"),
+                file.length() * 8 / Integer.parseInt(matcher.group("width")) / Integer.parseInt(matcher.group("height")),
+                (matcher.group("compressionType") != null) ? "| " + matcher.group("compressionType") : ""
+
+        );
     }
 }
