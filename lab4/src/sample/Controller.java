@@ -99,9 +99,10 @@ public class Controller implements Initializable {
             errors.add("Значение y0 должно быть задано!");
         }
 
-        if (choiceBox.getValue().equals(Algorithm.BRESENHAM_CIRCLE.getSimpleName()) &&
-                rTextField.getText().isEmpty()) {
-            errors.add("Значение r должно быть задано!");
+        if (choiceBox.getValue().equals(Algorithm.BRESENHAM_CIRCLE.getSimpleName())) {
+            if (rTextField.getText().isEmpty()) {
+                errors.add("Значение r должно быть задано!");
+            }
         } else {
             if (x1TextField.getText().isEmpty()) {
                 errors.add("Значение x1 должно быть задано!");
@@ -115,10 +116,10 @@ public class Controller implements Initializable {
         int y0 = Integer.parseInt(y0TextField.getText());
 
         if (x0 >= numCols) {
-            errors.add("Значение x0 должно быть <= " + numCols);
+            errors.add("Значение x0 должно быть < " + numCols);
         }
         if (y0 >= numRows) {
-            errors.add("Значение y0 должно быть <= " + numRows);
+            errors.add("Значение y0 должно быть < " + numRows);
         }
 
         int x1 = 0;
@@ -130,15 +131,18 @@ public class Controller implements Initializable {
             if (r > x0 || r > y0) {
                 errors.add("Значение r должно быть не больше чем x0 и y0");
             }
+            if (r + x0 >= numCols || r + y0 >= numRows) {
+                errors.add("Круг не должен выходить за границы области!");
+            }
         } else {
             x1 = Integer.parseInt(x1TextField.getText());
             y1 = Integer.parseInt(y1TextField.getText());
 
             if (x1 >= numCols) {
-                errors.add("Значение x1 должно быть <= " + numCols);
+                errors.add("Значение x1 должно быть < " + numCols);
             }
             if (y1 >= numRows) {
-                errors.add("Значение y1 должно быть <= " + numRows);
+                errors.add("Значение y1 должно быть < " + numRows);
             }
         }
 
@@ -192,7 +196,7 @@ public class Controller implements Initializable {
         listView.getItems().add("k = " + k);
         listView.getItems().add("b = " + b);
 
-        while (Math.signum(x1 - x) == sign) {
+        while (Math.signum(x1 - x) == sign && x < numCols && y < numRows) {
             gridPane.add(new Rectangle(10, 10, Color.BLACK), Math.round(x), Math.round(y));
             x += sign * 0.1;
             y = k * x + b;
